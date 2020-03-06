@@ -1,7 +1,7 @@
 ---
 title: "Starting Out"
 author: "Alex"
-date: "2020-03-04"
+date: "2020-03-05"
 description: "My Experience Creating a Webpare with Hugo, R, and more"
 output:
   blogdown::html_page:
