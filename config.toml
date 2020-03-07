@@ -1,5 +1,5 @@
 baseurl = "https://alex.rbind.io"
-title = "Alex Kinkelaar"
+title = "Alex"
 languagecode = "en-us"
 theme = "hugo-black-and-light-theme"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
@@ -8,15 +8,15 @@ pygmentsstyle       = "bw"
 pygmentscodefences  = true
 
 [params]
-  sitename = "Alex Kinkelaar"
+  sitename = "Alex"
   disableWebFonts = false
 
 [[menu.main]]
-    name = "Posts"
-    url  = "/"
-[[menu.main]]
     name = "About"
     url  = "/about"
+[[menu.main]]
+    name = "Posts"
+    url  = "/"
 
 [outputs]
   home = [ "HTML", "CSS", "RSS" ]

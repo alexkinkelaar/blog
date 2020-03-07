@@ -1,0 +1,94 @@
+---
+title: Natural Patterns and ggplot
+author: Alex
+date: '2020-03-06'
+slug: natural-patterns-and-ggplot
+categories: []
+tags:
+  - R
+  - ggplot2
+---
+
+### Phyllotaxis
+Patterns are everywhere in nature. Phyllotaxis can be defined as the arrangement of leaves on a plant stem. What's interesting about Phyllotaxis is that it follows a well known mathematical relation, the Fibonacci Sequence. This relation is one of many things in the natural world that can be described by mathematics. While I won't be looking at flowers today, I will look at trying to plot this relation in R using ggplot.
+
+### The Golden Angle
+The Golden Angle is another well known mathematical concept. Without going into too much detail, the Golden Angle can be described as the relation between two arcs, a and b, such that \frac{a+b}{a} = \frac{a}{b}. Plants arrange their leaves in spirals, and I'll use the Golden Angle to help describe the spirals when I use R to plot this. 
+
+### The Code
+
+Let's start by loading ggplot, and setting the plot window.
+```{r}
+options(repr.plot.width = 4, repr.plot.height = 4)
+library(ggplot2)
+```
+
+Next, I'll define some variables that I'll use throughout this exercise.
+```{r}
+num_points = 500 #This will be the number of points in the view
+golden_angle = pi*(3-sqrt(5)) #This is the mathematical definition for the Golden Angle
+t = (1:num_points) * golden_angle
+x = sin(t) #the x coordinate
+y = cos(t) #the y coordinate
+df = data.frame(t,x,y)
+```
+
+Now, Let's view a scatterplot of these points to get an idea of what we're looking at.
+```{r}
+p = ggplot(df, aes(x*t, y*t)) #define the graph
+p+geom_point() #plot the graph
+```
+
+What I have here is kind of a cool looking plot. It's a spiral created using the golden ratio. Lets clean up the graph and modify the points so that we can get a better idea of whats going on here.
+```{r}
+p = ggplot(df, aes(x*t, y*t))
+p+geom_point(size = 8, alpha = 0.5, color = "purple") +
+      theme(panel.background = element_rect(fill = "white"),
+            axis.ticks = element_blank(),
+            panel.grid = element_blank(),
+            axis.title = element_blank(),
+            axis.text = element_blank()
+            )
+```
+
+Now while that's interesting, it still doesn't look like a flower. Let's consider a sunflower, whos seeds are largely dispersed in this fashion. I can greate a chart that looks something like that.
+```{r}
+p = ggplot(df, aes(x*t, y*t))
+p + geom_point(aes(size = t), alpha = 0.5, shape = 17, color = "yellow") +
+      theme(panel.background = element_rect(fill = "grey15"),
+            axis.ticks = element_blank(),
+            panel.grid = element_blank(),
+            axis.title = element_blank(),
+            axis.text = element_blank(),
+            legend.position = "none"
+            )
+```
+
+This formula need not be used only for flowers. Infact, you can use this to create any number of abstract figures that follow some degree of spiral formation. Let's end by looking at one of those.
+
+```{r}
+angle = (7*pi)/180
+points = 200
+
+t = (1:points)*angle
+x = sin(t)
+y = cos(t)
+df = data.frame(t, x, y)
+
+p = ggplot(df, aes(x*t, y*t))
+p + geom_point(size = 75, alpha = 0.1, shape = 1, color = "lightslateblue") + 
+      theme(legend.position="none",
+        panel.background = element_rect(fill = "white"),
+        panel.grid=element_blank(),
+        axis.ticks=element_blank(),
+        axis.title=element_blank(),
+        axis.text=element_blank()
+      )
+```
+
+This shape might look a little confusing. It might help your understanding to know that the shape this plot is using is an empty circle. 
+
+This post was heavily inspired by a DataCamp project I did last fall.
+
+Alex
+
