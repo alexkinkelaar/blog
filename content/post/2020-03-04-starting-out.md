@@ -35,7 +35,7 @@ This part was actually much easier than expected. Heres the general idea:
 2. Netlify deploys that website for me, to a netlify hosted domain.
 3. Netlify will push this to the rbind.io domain thats been so greatly set up for me by their support team.
 
-All this means for me, is that when I want to make changes, I can make them locally, runb everything throw my local view, and then just push to Github. It makes all of what I have to do pretty easy.
+All this means for me, is that when I want to make changes, I can make them locally, run everything through my local view, and then just push to Github. It makes all of what I have to do pretty easy.
 
 Alex
 
