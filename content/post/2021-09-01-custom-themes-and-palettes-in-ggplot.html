@@ -1,0 +1,144 @@
+---
+title: Custom Themes and Palettes in ggplot
+author: Alex
+date: '2021-09-01'
+slug: custom-themes-and-palettes-in-ggplot
+categories: []
+tags: 
+  - R
+  - ggplot
+  - theme
+---
+
+
+
+<div id="themes-and-palettes-in-ggplot" class="section level3">
+<h3>Themes and Palettes in ggplot</h3>
+<p>Themes in ggplot allow for greater control of plot formatting - this can be very useful for branding purposes, where consistency and look are key. In the same sense, palettes give us control over the coloring of the plot. There are many great built in themes and palettes, but its also possible to create your own.</p>
+<pre class="r"><code>options(repr.plot.width = 4, repr.plot.height = 4)
+library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>## ✓ ggplot2 3.3.3     ✓ purrr   0.3.4
+## ✓ tibble  3.1.0     ✓ dplyr   1.0.5
+## ✓ tidyr   1.1.3     ✓ stringr 1.4.0
+## ✓ readr   1.4.0     ✓ forcats 0.5.1</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+</div>
+<div id="creating-a-custom-theme" class="section level3">
+<h3>Creating a Custom Theme</h3>
+<p>Creating your own theme is as easy as creating a function that includes the plot element modifications you want to define your theme. It should go without saying that you’ll need <code>ggplot2</code> loaded. I’ve defined my custom theme function as follows:</p>
+<pre class="r"><code>require(ggplot2)
+theme_alex = function(){
+  theme_void() %+replace%
+    #modifying void theme
+  theme(
+    #plot elements
+    plot.caption = element_text(face = &quot;italic&quot;, size = 10, color = &quot;white&quot;),
+    plot.title = element_text(face = &quot;bold&quot;, size = 14, color = &quot;white&quot;),
+    plot.subtitle = element_text(face = &quot;italic&quot;, size = 11, color = &quot;white&quot;),
+    plot.background = element_rect(fill = &quot;grey12&quot;, color = NA),
+    #panel/grid elements
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank(),
+    #axis elements
+    axis.text.x = element_text(color = &quot;white&quot;, size = 9),
+    axis.title.y = element_text(color = &quot;white&quot;, size = 11, angle = 90),
+    axis.title.x = element_text(color = &quot;white&quot;, size = 11),
+    axis.ticks.x = element_line(color = &quot;white&quot;),
+    axis.text.y = element_text(color = &quot;white&quot;, size = 9),
+    axis.ticks.y = element_line(color = &quot;white&quot;),
+    axis.line.x = element_line(color = &quot;white&quot;),
+    axis.line.y = element_line(color = &quot;white&quot;),
+    #legend elements
+    legend.position = &quot;bottom&quot;,
+    legend.text = element_text(color = &quot;white&quot;),
+    legend.title = element_blank()
+  )
+}</code></pre>
+<p>Essentially, I’ve taken the built in theme <code>theme_void()</code>, and modified it to fit my purposes. The result is a dark background with white plot elements, and some formatted plot text elements. Thats all there is to creating a custom theme.</p>
+</div>
+<div id="creating-a-custom-palette" class="section level3">
+<h3>Creating a Custom Palette</h3>
+<p>Creating a custom color palette is a little bit more involved - we’ll need to use a handful of objects and functions to get to a point where the palette is easily usable in a <code>ggplot()</code> call. First, let’s define the colors we want to use in the palette. I’m using the <code>show_col</code> function from the <code>scales</code> library to display my palette here.</p>
+<pre class="r"><code>#custom colors
+custcolors = c(
+  `light blue` = &quot;#85D4E3&quot;,
+  `salmon` = &quot;#FD7F71&quot;,
+  `green` = &quot;#0B775E&quot;,
+  `purple`= &quot;#35274A&quot;,
+  #`orange` = &quot;#F2300F&quot;, &lt;- Clashes with salmon?
+  `light gray` = &quot;#D9D0D3&quot;,
+  `dark blue` = &quot;#00268E&quot;
+)
+library(scales)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;scales&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     discard</code></pre>
+<pre><code>## The following object is masked from &#39;package:readr&#39;:
+## 
+##     col_factor</code></pre>
+<pre class="r"><code>show_col(custcolors)</code></pre>
+<p><img src="/post/2021-09-01-custom-themes-and-palettes-in-ggplot_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>We’ll need a helper function to grab these colors from the list and return them wherever they’re being used.</p>
+<pre class="r"><code>colors_alex = function(...){
+  
+  cols = c(...)
+  
+  if(is.null(cols))
+    return(custcolors)
+  
+  custcolors[cols]
+}</code></pre>
+<p>We can use the same list of colors for multiple palettes - in this case, I only really want one palette. However, I’ll build this in a way that more palettes could be added if I ever decide to revisit my custom palette.</p>
+<pre class="r"><code>#Palette list -&gt; allows additional palettes to be added modularly
+#Changes to individual palettes are made in this list - additional palettes can be added, modified, or removed here
+palettes_alex = list(
+  `main` = colors_alex(&quot;light blue&quot;, &quot;salmon&quot;, &quot;green&quot;, &quot;purple&quot;, &quot;light gray&quot;, &quot;dark blue&quot;)
+)
+#Function to interpolate custom color palette
+# palette - the palette to return
+# reverse - boolean input to reverse (or not) the palette&#39;s ordering
+# ... - additional arguments
+palette_alex = function(palette = &quot;main&quot;, reverse = FALSE, ...){
+  pal = palettes_alex[[palette]]
+  if(reverse) pal = rev(pal)
+  colorRampPalette(pal,...)
+}</code></pre>
+<p>The last thing we need is functions to pull the pallete into a <code>color</code> or <code>fill</code> argument in a ggplot object.</p>
+<pre class="r"><code>#Function for COLOR argument in ggplot
+scale_color_alex = function(palette = &quot;main&quot;, discrete = TRUE, reverse = FALSE,...){
+  pal = palette_alex(palette = palette, reverse = reverse)
+  if(discrete){
+    discrete_scale(&quot;coluor&quot;, paste0(&quot;alex_&quot;, palette), palette = pal, ...)
+  } else {
+    scale_color_gradientn(colors = pal(256), ...)
+  }
+}
+#Function for FILL argument in ggplot
+scale_fill_alex = function(palette = &quot;main&quot;, discrete = TRUE, reverse = FALSE, ...){
+  pal = palette_alex(palette = palette, reverse = reverse)
+  if(discrete){
+    discrete_scale(&quot;fill&quot;, pase0(&quot;alex_&quot;, palette), palette = pal, ...)
+  } else {
+    scale_fill_gradientn(colors = pal(256), ...)
+  }
+}</code></pre>
+</div>
+<div id="putting-it-all-together" class="section level3">
+<h3>Putting it all together</h3>
+<p>We can now use our custom theme and palette in a plot using ggplot.</p>
+<pre class="r"><code>mtcars %&gt;% ggplot(aes(x = hp, y = mpg, color = as.factor(cyl))) +
+  geom_line(size = 1.5, alpha = 0.5) +
+  scale_color_alex() + 
+  theme_alex() + 
+  xlab(&quot;Horsepower&quot;) + 
+  ylab(&quot;Miles per Gallon&quot;) +
+  labs(
+    title = &quot;Miles per Gallon vs Horsepower&quot;
+  )</code></pre>
+<p><img src="/post/2021-09-01-custom-themes-and-palettes-in-ggplot_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
