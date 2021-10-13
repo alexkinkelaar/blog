@@ -18,33 +18,12 @@ tags:
 </div>
 <div id="setup" class="section level3">
 <h3>Setup</h3>
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
-<pre><code>## ✓ ggplot2 3.3.3     ✓ purrr   0.3.4
-## ✓ tibble  3.1.0     ✓ dplyr   1.0.5
-## ✓ tidyr   1.1.3     ✓ stringr 1.4.0
-## ✓ readr   1.4.0     ✓ forcats 0.5.1</code></pre>
-<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>library(alex) #custom/personal theme package
-library(janitor)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;janitor&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     chisq.test, fisher.test</code></pre>
-<pre class="r"><code>fish = read_csv(&#39;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-10-12/fish-stocks-within-sustainable-levels.csv&#39;) %&gt;% 
+<pre class="r"><code>library(tidyverse)
+library(alex) #custom/personal theme package
+library(janitor)
+
+fish = read_csv(&#39;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-10-12/fish-stocks-within-sustainable-levels.csv&#39;) %&gt;% 
   clean_names()</code></pre>
-<pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────
-## cols(
-##   Entity = col_character(),
-##   Code = col_character(),
-##   Year = col_double(),
-##   `Share of fish stocks within biologically sustainable levels (FAO, 2020)` = col_double(),
-##   `Share of fish stocks that are overexploited` = col_double()
-## )</code></pre>
 </div>
 <div id="data-manipulation" class="section level3">
 <h3>Data Manipulation</h3>

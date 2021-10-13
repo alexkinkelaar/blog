@@ -16,7 +16,7 @@ tags:
 
 ### Setup
 
-```{r Setup}
+```{r Setup, warning=FALSE, error=FALSE,message=FALSE}
 library(tidyverse)
 library(alex) #custom/personal theme package
 library(janitor)
